@@ -6,6 +6,12 @@ enum State {
     CapeMario,
 }
 
+impl std::fmt::Display for State {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "OLA")
+    }
+}
+
 #[derive(Debug)]
 enum Transition {
     Mushroom,
@@ -41,4 +47,5 @@ fn main() {
     dplayer.collect(Transition::Feather);
     dplayer.collect(Transition::Flower);
     assert!(dplayer.state == State::CapeMario);
+    println!("{}", dplayer.state);
 }
