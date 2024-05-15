@@ -44,6 +44,9 @@ impl Player {
         }
     }
     fn collect(&mut self, power: Transition) {
+        #[cfg(debug_assertions)]
+        print!("Consuming {:?}, ", &power);
+
         match (&self.state, power) {
             (State::Dead, power) if power.property() == TransitionProperty::Revive => {
                 self.state = State::Mario
@@ -57,6 +60,9 @@ impl Player {
             (_, Transition::Feather) => self.state = State::CapeMario,
             (_, Transition::Mushroom) => {}
         }
+
+        #[cfg(debug_assertions)]
+        println!("Current state: {:?}", self.state);
     }
 }
 
@@ -65,7 +71,17 @@ fn main() {
     dplayer.collect(Transition::Mushroom);
     dplayer.collect(Transition::Flower);
     dplayer.collect(Transition::Feather);
+    dplayer.collect(Transition::Mushroom);
+    dplayer.collect(Transition::Mushroom);
+    dplayer.collect(Transition::Mushroom);
+    dplayer.collect(Transition::Damage);
+    dplayer.collect(Transition::Damage);
     dplayer.collect(Transition::Flower);
+    dplayer.collect(Transition::Damage);
+    dplayer.collect(Transition::Damage);
+    dplayer.collect(Transition::Damage);
+    dplayer.collect(Transition::Damage);
+    dplayer.collect(Transition::Feather);
     dplayer.collect(Transition::Damage);
     // assert!(dplayer.state == State::CapeMario);
     println!("{:?}", dplayer.state);
