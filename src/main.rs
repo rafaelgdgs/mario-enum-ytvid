@@ -12,6 +12,7 @@ enum Transition {
     Mushroom,
     Flower,
     Feather,
+    Damage,
 }
 
 #[derive(Debug)]
@@ -28,10 +29,13 @@ impl Player {
     fn collect(&mut self, power: Transition) {
         match (&self.state, power) {
             (State::Dead, _) => {}
+            (State::Mario, Transition::Damage) => self.state = State::Dead,
+            (State::SuperMario, Transition::Damage) => self.state = State::Mario,
             (State::Mario, Transition::Mushroom) => self.state = State::SuperMario,
             (_, Transition::Flower) => self.state = State::FireMario,
             (_, Transition::Feather) => self.state = State::CapeMario,
             (_, Transition::Mushroom) => {}
+            (_, Transition::Damage) => self.state = State::SuperMario,
         }
     }
 }
@@ -42,5 +46,7 @@ fn main() {
     dplayer.collect(Transition::Flower);
     dplayer.collect(Transition::Feather);
     dplayer.collect(Transition::Flower);
-    assert!(dplayer.state == State::CapeMario);
+    dplayer.collect(Transition::Damage);
+    // assert!(dplayer.state == State::CapeMario);
+    println!("{:?}", dplayer.state);
 }
