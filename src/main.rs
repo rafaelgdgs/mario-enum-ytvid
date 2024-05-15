@@ -4,6 +4,7 @@ enum State {
     SuperMario,
     FireMario,
     CapeMario,
+    Dead,
 }
 
 #[derive(Debug)]
@@ -26,6 +27,7 @@ impl Player {
     }
     fn collect(&mut self, power: Transition) {
         match (&self.state, power) {
+            (State::Dead, _) => {}
             (State::Mario, Transition::Mushroom) => self.state = State::SuperMario,
             (_, Transition::Flower) => self.state = State::FireMario,
             (_, Transition::Feather) => self.state = State::CapeMario,
