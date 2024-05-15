@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 #[derive(Debug, PartialEq)]
 enum State {
     Mario,
@@ -7,7 +9,7 @@ enum State {
     Dead,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 enum TransitionProperty {
     Revive,
     None,
@@ -22,13 +24,16 @@ enum Transition {
 }
 
 impl Transition {
-    fn property(&self) -> TransitionProperty {
+    fn property(&self) -> HashSet<TransitionProperty> {
+        let mut transitions: HashSet<TransitionProperty> = HashSet::new();
+
         match self {
-            Transition::Mushroom => TransitionProperty::None,
-            Transition::Flower => TransitionProperty::None,
-            Transition::Damage => TransitionProperty::None,
-            Transition::Feather => TransitionProperty::Revive,
-        }
+            Transition::Mushroom => transitions.insert(TransitionProperty::None),
+            Transition::Flower => transitions.insert(TransitionProperty::None),
+            Transition::Damage => transitions.insert(TransitionProperty::None),
+            Transition::Feather => transitions.insert(TransitionProperty::Revive),
+        };
+        transitions
     }
 }
 
@@ -48,7 +53,7 @@ impl Player {
         print!("Consuming {:?}, ", &power);
 
         match (&self.state, power) {
-            (State::Dead, power) if power.property() == TransitionProperty::Revive => {
+            (State::Dead, power) if power.property().contains(&TransitionProperty::Revive) => {
                 self.state = State::Mario
             }
             (State::Dead, _) => {}
