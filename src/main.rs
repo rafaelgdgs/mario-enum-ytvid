@@ -71,23 +71,64 @@ impl Player {
     }
 }
 
+fn game_menu() -> std::result::Result<u8, String> {
+    let mut user_input = String::new();
+    std::io::stdin().read_line(&mut user_input).unwrap();
+    match user_input.as_str() {
+        "0\n" => {
+            println!("Options: 1-Mushroom 2-Flower 3-Feather 4-Damage q-Leave");
+            Ok(0)
+        }
+        "1\n" => Ok(1),
+        "2\n" => Ok(2),
+        "3\n" => Ok(3),
+        "4\n" => Ok(4),
+        "q\n" | "Q\n" => Ok(255),
+        _ => Err("Valor Invalido!".to_string()),
+    }
+}
+
+fn run_game(player: &mut Player) {
+    println!("Press '0' to show menu");
+    loop {
+        match game_menu() {
+            Ok(value) => match value {
+                255 => {
+                    println!("Leaving ...");
+                    break;
+                }
+                1 => player.collect(Transition::Mushroom),
+                2 => player.collect(Transition::Flower),
+                3 => player.collect(Transition::Feather),
+                4 => player.collect(Transition::Damage),
+                0 => {}
+                _ => {}
+            },
+            Err(err) => {
+                println!("{}", err);
+            }
+        }
+    }
+}
+
 fn main() {
     let mut dplayer = Player::new();
-    dplayer.collect(Transition::Mushroom);
-    dplayer.collect(Transition::Flower);
-    dplayer.collect(Transition::Feather);
-    dplayer.collect(Transition::Mushroom);
-    dplayer.collect(Transition::Mushroom);
-    dplayer.collect(Transition::Mushroom);
-    dplayer.collect(Transition::Damage);
-    dplayer.collect(Transition::Damage);
-    dplayer.collect(Transition::Flower);
-    dplayer.collect(Transition::Damage);
-    dplayer.collect(Transition::Damage);
-    dplayer.collect(Transition::Damage);
-    dplayer.collect(Transition::Damage);
-    dplayer.collect(Transition::Feather);
-    dplayer.collect(Transition::Damage);
+    run_game(&mut dplayer);
+    // dplayer.collect(Transition::Mushroom);
+    // dplayer.collect(Transition::Flower);
+    // dplayer.collect(Transition::Feather);
+    // dplayer.collect(Transition::Mushroom);
+    // dplayer.collect(Transition::Mushroom);
+    // dplayer.collect(Transition::Mushroom);
+    // dplayer.collect(Transition::Damage);
+    // dplayer.collect(Transition::Damage);
+    // dplayer.collect(Transition::Flower);
+    // dplayer.collect(Transition::Damage);
+    // dplayer.collect(Transition::Damage);
+    // dplayer.collect(Transition::Damage);
+    // dplayer.collect(Transition::Damage);
+    // dplayer.collect(Transition::Feather);
+    // dplayer.collect(Transition::Damage);
     // assert!(dplayer.state == State::CapeMario);
-    println!("{:?}", dplayer.state);
+    println!("Last state: {:?}", dplayer.state);
 }
